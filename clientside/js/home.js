@@ -6,6 +6,21 @@ fetch('http://localhost:3000/api/events')
 
         events.forEach(event => {
 
+            if (event.status === 'suspended') {
+                return;
+            }
+
+            const today = new Date();
+            const eventDate = new Date(event.event_date);
+
+            let eventStatus;
+
+            if (eventDate < today) {
+                eventStatus = 'Ended';
+            } else {
+                eventStatus = 'Upcoming';
+            }
+
             const eventCard = document.createElement('div');
 
             eventCard.innerHTML = `
@@ -13,6 +28,7 @@ fetch('http://localhost:3000/api/events')
                 <p><strong>Category:</strong> ${event.category_name}</p>
                 <p><strong>Date:</strong> ${event.event_date}</p>
                 <p><strong>Location:</strong> ${event.location}</p>
+                <p><strong>Status:</strong> ${eventStatus}</p>
 
                 <a href="event.html?id=${event.event_id}">
                     View Details
